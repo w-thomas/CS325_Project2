@@ -10,7 +10,9 @@ class coinsData {
     int * numOfEach;
     int target;
     int numCoins;
-    coinsData(int t, int denoms[], int numDenoms){
+    int numDenoms;
+    coinsData(int t, int denoms[], int numDs){
+      numDenoms = numDs;
       target = t;
       denominations = new int[numDenoms];
       numOfEach = new int[numDenoms];
@@ -22,6 +24,34 @@ class coinsData {
     }
 };
 
+/*
+//  This "greedy" change-maker lives in the moment, simply dishing out whatever coin
+//  looks like it will minimize the owed change the most.
+*/
+void yoloCoins(coinsData & data){
+  while (data.target != 0){
+    std::cout << data.target << '\n';
+    int addedCoin = 0;
+    for (int x = 0; x < data.numDenoms; x++){
+      if (data.denominations[x] > data.target && !addedCoin && data.target){
+        std::cout << "subtracting " << data.denominations[x-1] << '\n';
+        data.numOfEach[x-1]++;
+        data.target -= data.denominations[x-1];
+        data.numCoins++;
+        addedCoin = 1;
+      }
+    }
+    if (!addedCoin && data.target){
+      std::cout << "subtracting " << data.denominations[data.numDenoms-1] << '\n';
+      data.numOfEach[data.numDenoms-1]++;
+      data.target -= data.denominations[data.numDenoms-1];
+      data.numCoins++;
+      addedCoin = 1;
+    }
+  }
+  return;
+}
+
 
 int main(int argc, char ** argv){
   if (argc != 2){
@@ -32,17 +62,15 @@ int main(int argc, char ** argv){
   int fNamePos = outputFName.find(".");
   outputFName = outputFName.substr(0, fNamePos);
   outputFName += "change.txt";
-  std::cout << outputFName << '\n';
   std::ifstream file (argv[1]);
   std::ofstream output (outputFName.c_str());
-  std::vector<int> denoms;
   int target;
   std::string line;
   while (getline (file, line)){
+    std::vector<int> denoms;
     int hasNumber = 0;
     int number = 0;
     for (int x = 0; x < line.length(); x++){
-      //std::cout << line[x] << "\n";
       if (isdigit(line[x])){
         hasNumber = 1;
         number *= 10;
@@ -61,7 +89,8 @@ int main(int argc, char ** argv){
     int * denomsArr = new int[denoms.size()];
     std::copy(denoms.begin(), denoms.end(), denomsArr);
     coinsData data (target, denomsArr, denoms.size());
-    // Call Algorithm 1 here
+    //yoloCoins(data);
+    // Insert your own algorithm here.
     std::string outputArray = "[";
     for (int y = 0; y < denoms.size(); y++){
       char temp[100];
