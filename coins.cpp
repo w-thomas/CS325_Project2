@@ -53,7 +53,20 @@ void yoloCoins(coinsData & data){
 }
 
 
-
+void outputResults(std::string text, int arrayNum, coinsData data, std::ofstream &output){
+  output << text << " for test #" << arrayNum << '\n';
+  std::string outputArray = "[";
+    for (int y = 0; y < data.numDenoms; y++){
+      char temp[100];
+      sprintf(temp, "%d", data.numOfEach[y]);
+      outputArray += temp;
+      outputArray += ",";
+    }
+    outputArray.erase(outputArray.size() - 1);
+    outputArray += "]";
+    output << outputArray << '\n';
+    output << data.numCoins << '\n';
+}
 
 int main(int argc, char ** argv){
   if (argc != 2){
@@ -67,7 +80,9 @@ int main(int argc, char ** argv){
   std::ifstream file (argv[1]);
   std::ofstream output (outputFName.c_str());
   std::string line;
+  int arrayNum = 0;
   while (getline (file, line)){
+    arrayNum++;
     std::vector<int> denoms;
     int target;
     int hasNumber = 0;
@@ -90,20 +105,20 @@ int main(int argc, char ** argv){
     // Copy the vector to an array
     int * denomsArr = new int[denoms.size()];
     std::copy(denoms.begin(), denoms.end(), denomsArr);
-    coinsData data (target, denomsArr, denoms.size());
-    yoloCoins(data);
-    // Insert your own algorithm here.
-    std::string outputArray = "[";
-    for (int y = 0; y < denoms.size(); y++){
-      char temp[100];
-      sprintf(temp, "%d", data.numOfEach[y]);
-      outputArray += temp;
-      outputArray += ",";
-    }
-    outputArray.erase(outputArray.size() - 1);
-    outputArray += "]";
-    output << outputArray << '\n';
-    output << data.numCoins << '\n';
+    coinsData greedyData (target, denomsArr, denoms.size());
+    coinsData dynData (target, denomsArr, denoms.size());
+    coinsData divAndConqData (target, denomsArr, denoms.size());
+    
+    yoloCoins(greedyData);
+    outputResults("Greedy output", arrayNum, greedyData, output);
+  
+    // uncomment your section when your algorithm is complete.
+  
+    // dynCoins(dynData);
+    // outputResults("Dynamic programming output", arrayNum, dynData, output);
+    
+    // divAndConqCoins(divAndConqData);
+    // outputResults("Divide and conquer output", arrayNum divAndConqData, output);
     
   }
   output.close();
