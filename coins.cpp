@@ -53,6 +53,8 @@ void yoloCoins(coinsData & data){
 }
 
 
+
+
 int main(int argc, char ** argv){
   if (argc != 2){
     std::cout << "Please call this program with the filename as argument.\n";
@@ -64,10 +66,10 @@ int main(int argc, char ** argv){
   outputFName += "change.txt";
   std::ifstream file (argv[1]);
   std::ofstream output (outputFName.c_str());
-  int target;
   std::string line;
   while (getline (file, line)){
     std::vector<int> denoms;
+    int target;
     int hasNumber = 0;
     int number = 0;
     for (int x = 0; x < line.length(); x++){
@@ -89,7 +91,7 @@ int main(int argc, char ** argv){
     int * denomsArr = new int[denoms.size()];
     std::copy(denoms.begin(), denoms.end(), denomsArr);
     coinsData data (target, denomsArr, denoms.size());
-    //yoloCoins(data);
+    yoloCoins(data);
     // Insert your own algorithm here.
     std::string outputArray = "[";
     for (int y = 0; y < denoms.size(); y++){
