@@ -59,7 +59,18 @@ void yoloCoins(coinsData & data){
   return;
 }
 
-void bruteCoins(coinsData &data){
+/*****************************
+ * changeSlow(coinsData &data)
+ * This function recursively makes change for target cents
+ * Recursively checks target value against array of available
+ * coin denominations. This method is quite slow, as it will
+ * Check each solution many times. As number of coin values grow the number of combos 
+ * grows exponentially.
+ * Params: initialized coinsData object
+ * Returns: void
+*****************************/
+void changeSlow(coinsData &data){
+  //Base case, we have made enough change
   if (data.target == 0){
     if (data.numCoins < data.bestNumCoins){
       data.bestNumCoins = data.numCoins;
@@ -71,7 +82,11 @@ void bruteCoins(coinsData &data){
   if (data.numCoins > data.bestNumCoins){
     return;
   }
-
+  
+  //Iterates through array of coin denominations
+  //By iterating backwards we can start with largest value
+  //If we find a coing <= target starting with largest we subtract it
+  //from the target.
   for (int i = data.numDenoms - 1; i >= 0; i--)
   {
     if(data.target >= data.denominations[i]){
@@ -147,7 +162,7 @@ int main(int argc, char ** argv){
     // dynCoins(dynData);
     // outputResults("Dynamic programming output", arrayNum, dynData, output);
 
-    bruteCoins(divAndConqData);
+    changeSlow(divAndConqData);
     outputResults("Divide and conquer output", arrayNum, divAndConqData, output);
 
   }
