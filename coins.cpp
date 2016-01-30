@@ -3,23 +3,30 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <limits.h>
 
 class coinsData {
   public:
     int * denominations;
     int * numOfEach;
+    int *bestNumOfEach;
     int target;
     int numCoins;
+    int bestNumCoins; //used for recursive base case
     int numDenoms;
     coinsData(int t, int denoms[], int numDs){
       numDenoms = numDs;
+      bestNumCoins = INT_MAX;
       target = t;
       denominations = new int[numDenoms];
       numOfEach = new int[numDenoms];
+      bestNumOfEach = new int[numDenoms];
       for (int x = 0; x < numDenoms; x++){
         numOfEach[x] = 0;
+        bestNumOfEach[x] = 0;
         denominations[x] = denoms[x];
         numCoins = 0;
+
       }
     }
 };
@@ -52,6 +59,29 @@ void yoloCoins(coinsData & data){
   return;
 }
 
+void bruteCoins(coinsData &data){
+  if (data.target == 0){
+    if (data.numCoins < data.bestNumCoins){
+      data.bestNumCoins = data.numCoins;
+      data.bestNumOfEach = data.numOfEach;
+    }
+    return;
+  }
+
+  if (data.numCoins > data.bestNumCoins){
+    return;
+  }
+
+  for (int i = data.numDenoms - 1; i >= 0; i--)
+  {
+    if(data.target >= data.denominations[i]){
+      data.numCoins += 1;
+      data.numOfEach[i]++;
+      data.target -= data.denominations[i];
+      bruteCoins(data);
+    }
+  }
+}
 
 void outputResults(std::string text, int arrayNum, coinsData data, std::ofstream &output){
   output << text << " for test #" << arrayNum << '\n';
@@ -108,18 +138,18 @@ int main(int argc, char ** argv){
     coinsData greedyData (target, denomsArr, denoms.size());
     coinsData dynData (target, denomsArr, denoms.size());
     coinsData divAndConqData (target, denomsArr, denoms.size());
-    
+
     yoloCoins(greedyData);
     outputResults("Greedy output", arrayNum, greedyData, output);
-  
+
     // uncomment your section when your algorithm is complete.
-  
+
     // dynCoins(dynData);
     // outputResults("Dynamic programming output", arrayNum, dynData, output);
-    
-    // divAndConqCoins(divAndConqData);
-    // outputResults("Divide and conquer output", arrayNum divAndConqData, output);
-    
+
+    bruteCoins(divAndConqData);
+    outputResults("Divide and conquer output", arrayNum, divAndConqData, output);
+
   }
   output.close();
   file.close();
