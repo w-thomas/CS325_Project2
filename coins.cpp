@@ -4,23 +4,30 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <limits.h>
 
 class coinsData {
   public:
     int * denominations;
     int * numOfEach;
+    int *bestNumOfEach;
     int target;
     int numCoins;
+    int bestNumCoins; //used for recursive base case
     int numDenoms;
     coinsData(int t, int denoms[], int numDs){
       numDenoms = numDs;
+      bestNumCoins = INT_MAX;
       target = t;
       denominations = new int[numDenoms];
       numOfEach = new int[numDenoms];
+      bestNumOfEach = new int[numDenoms];
       for (int x = 0; x < numDenoms; x++){
         numOfEach[x] = 0;
+        bestNumOfEach[x] = 0;
         denominations[x] = denoms[x];
         numCoins = 0;
+
       }
     }
 };
@@ -53,6 +60,7 @@ void yoloCoins(coinsData & data){
   return;
 }
 
+<<<<<<< HEAD
 /*
 //	This change-making algorithm builds a table from the bottom up to calculate
 //	the optimal change.
@@ -107,6 +115,45 @@ void dynCoins(coinsData & data){
   }
 
 	return;
+=======
+/*****************************
+ * changeSlow(coinsData &data)
+ * This function recursively makes change for target cents
+ * Recursively checks target value against array of available
+ * coin denominations. This method is quite slow, as it will
+ * Check each solution many times. As number of coin values grow the number of combos 
+ * grows exponentially.
+ * Params: initialized coinsData object
+ * Returns: void
+*****************************/
+void changeSlow(coinsData &data){
+  //Base case, we have made enough change
+  if (data.target == 0){
+    if (data.numCoins < data.bestNumCoins){
+      data.bestNumCoins = data.numCoins;
+      data.bestNumOfEach = data.numOfEach;
+    }
+    return;
+  }
+
+  if (data.numCoins > data.bestNumCoins){
+    return;
+  }
+  
+  //Iterates through array of coin denominations
+  //By iterating backwards we can start with largest value
+  //If we find a coing <= target starting with largest we subtract it
+  //from the target.
+  for (int i = data.numDenoms - 1; i >= 0; i--)
+  {
+    if(data.target >= data.denominations[i]){
+      data.numCoins += 1;
+      data.numOfEach[i]++;
+      data.target -= data.denominations[i];
+      bruteCoins(data);
+    }
+  }
+>>>>>>> origin/master
 }
 
 void outputResults(std::string text, int arrayNum, coinsData data, std::ofstream &output){
@@ -164,9 +211,10 @@ int main(int argc, char ** argv){
     coinsData greedyData (target, denomsArr, denoms.size());
     coinsData dynData (target, denomsArr, denoms.size());
     coinsData divAndConqData (target, denomsArr, denoms.size());
-    
+
     yoloCoins(greedyData);
     outputResults("Greedy output", arrayNum, greedyData, output);
+<<<<<<< HEAD
   
     dynCoins(dynData);
     outputResults("Dynamic programming output", arrayNum, dynData, output);
@@ -175,6 +223,17 @@ int main(int argc, char ** argv){
     
     // divAndConqCoins(divAndConqData);
     // outputResults("Divide and conquer output", arrayNum divAndConqData, output);
+=======
+
+    // uncomment your section when your algorithm is complete.
+
+    // dynCoins(dynData);
+    // outputResults("Dynamic programming output", arrayNum, dynData, output);
+
+    changeSlow(divAndConqData);
+    outputResults("Divide and conquer output", arrayNum, divAndConqData, output);
+
+>>>>>>> origin/master
   }
   output.close();
   file.close();
