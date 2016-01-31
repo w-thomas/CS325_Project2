@@ -1,3 +1,7 @@
+/*
+*   Can be used to gather coin and timing data for experimental results
+*/
+
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
@@ -105,7 +109,6 @@ void dynCoins(coinsData & data){
     data.numOfEach[i] = count[data.target][i];
     //printf("%d: %d\n", data.denominations[i], count[data.target][i]);
   }
-
 	return;
 }
 
@@ -133,51 +136,29 @@ int main(int argc, char ** argv){
   int fNamePos = outputFName.find(".");
   outputFName = outputFName.substr(0, fNamePos);
   outputFName += "change.txt";
-  std::ifstream file (argv[1]);
   std::ofstream output (outputFName.c_str());
-  std::string line;
-  int arrayNum = 0;
-  while (getline (file, line)){
-    arrayNum++;
-    std::vector<int> denoms;
-    int target;
-    int hasNumber = 0;
-    int number = 0;
-    for (int x = 0; x < line.length(); x++){
-      if (isdigit(line[x])){
-        hasNumber = 1;
-        number *= 10;
-        number += (line[x] - '0');
-      } else {
-        if (hasNumber){
-          denoms.push_back(number);
-          number = 0;
-          hasNumber = 0;
-        }
-      }
-    }
-    getline(file, line);
-    target = atoi(line.c_str());
-    // Copy the vector to an array
-    int * denomsArr = new int[denoms.size()];
-    std::copy(denoms.begin(), denoms.end(), denomsArr);
-    coinsData greedyData (target, denomsArr, denoms.size());
-    coinsData dynData (target, denomsArr, denoms.size());
-    coinsData divAndConqData (target, denomsArr, denoms.size());
-    
-    yoloCoins(greedyData);
-    outputResults("Greedy output", arrayNum, greedyData, output);
   
-    dynCoins(dynData);
-    outputResults("Dynamic programming output", arrayNum, dynData, output);
-
-    // uncomment your section when your algorithm is complete.
+  /***************** DENOMINATION ARRAY *****************/
+  int denomsArr[] = {1,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30};
+  clock_t t;
+  for(int i = 10000; i <= 1000000; i = i + 10000){
     
-    // divAndConqCoins(divAndConqData);
-    // outputResults("Divide and conquer output", arrayNum divAndConqData, output);
-  }
-  output.close();
-  file.close();
+    coinsData myData (i, denomsArr, 16);
+    t = clock();
 
+    /***************** Select your algorithm and choose to output coin data or timing data (milliseconds) *****************/
+    /***************** (Comment out what you don't need) *****************/
+    //yoloCoins(myData);
+    //outputResults("Greedy output", i, myData, output);
+    
+    dynCoins(myData);
+    //outputResults("Dynamic programming output", i, myData, output);
+    
+    //divAndConqCoins(divAndConqData);
+    //outputResults("Divide and conquer output", arrayNum, myData, output);
+
+    t = clock() - t;
+    output << ((float)(1000*t))/CLOCKS_PER_SEC << std::endl;
+  }
   return 0;
 }
