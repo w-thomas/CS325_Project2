@@ -5,6 +5,7 @@
 #include <cstring>
 #include <vector>
 #include <limits.h>
+#include <time.h>
 
 class coinsData {
   public:
@@ -150,7 +151,7 @@ void changeSlow(coinsData &data){
       data.numCoins += 1;
       data.numOfEach[i]++;
       data.target -= data.denominations[i];
-      bruteCoins(data);
+      changeSlow(data);
     }
   }
 }
@@ -210,14 +211,33 @@ int main(int argc, char ** argv){
     coinsData greedyData (target, denomsArr, denoms.size());
     coinsData dynData (target, denomsArr, denoms.size());
     coinsData divAndConqData (target, denomsArr, denoms.size());
+    
+    time_t start, end;
+    double runtime;
 
+    start = time(0);
     yoloCoins(greedyData);
+    end = time(0);
+    runtime = (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
+    
+    std::cout << "yoloCoins took " << runtime << " milliseconds\n";
     outputResults("Greedy output", arrayNum, greedyData, output);
-  
+    
+    start = time(0);
     dynCoins(dynData);
+    end = time(0);
+    runtime = (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
+    
+    std::cout << "dynCoins() took " << runtime << " milliseconds\n";
     outputResults("Dynamic programming output", arrayNum, dynData, output);
-
+    
+    
+    
     changeSlow(divAndConqData);
+    end = time(0);
+    runtime = (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
+ 
+    std::cout << "changeSlow() took " << runtime << " milliseconds\n";
     outputResults("Divide and conquer output", arrayNum, divAndConqData, output);
 
   }
