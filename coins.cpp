@@ -60,7 +60,6 @@ void yoloCoins(coinsData & data){
   return;
 }
 
-<<<<<<< HEAD
 /*
 //	This change-making algorithm builds a table from the bottom up to calculate
 //	the optimal change.
@@ -115,7 +114,8 @@ void dynCoins(coinsData & data){
   }
 
 	return;
-=======
+}
+
 /*****************************
  * changeSlow(coinsData &data)
  * This function recursively makes change for target cents
@@ -153,7 +153,6 @@ void changeSlow(coinsData &data){
       bruteCoins(data);
     }
   }
->>>>>>> origin/master
 }
 
 void outputResults(std::string text, int arrayNum, coinsData data, std::ofstream &output){
@@ -214,7 +213,6 @@ int main(int argc, char ** argv){
 
     yoloCoins(greedyData);
     outputResults("Greedy output", arrayNum, greedyData, output);
-<<<<<<< HEAD
   
     dynCoins(dynData);
     outputResults("Dynamic programming output", arrayNum, dynData, output);
@@ -223,7 +221,6 @@ int main(int argc, char ** argv){
     
     // divAndConqCoins(divAndConqData);
     // outputResults("Divide and conquer output", arrayNum divAndConqData, output);
-=======
 
     // uncomment your section when your algorithm is complete.
 
@@ -233,7 +230,6 @@ int main(int argc, char ** argv){
     changeSlow(divAndConqData);
     outputResults("Divide and conquer output", arrayNum, divAndConqData, output);
 
->>>>>>> origin/master
   }
   output.close();
   file.close();
