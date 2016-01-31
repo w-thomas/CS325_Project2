@@ -217,16 +217,6 @@ int main(int argc, char ** argv){
     dynCoins(dynData);
     outputResults("Dynamic programming output", arrayNum, dynData, output);
 
-    // uncomment your section when your algorithm is complete.
-    
-    // divAndConqCoins(divAndConqData);
-    // outputResults("Divide and conquer output", arrayNum divAndConqData, output);
-
-    // uncomment your section when your algorithm is complete.
-
-    // dynCoins(dynData);
-    // outputResults("Dynamic programming output", arrayNum, dynData, output);
-
     changeSlow(divAndConqData);
     outputResults("Divide and conquer output", arrayNum, divAndConqData, output);
 
