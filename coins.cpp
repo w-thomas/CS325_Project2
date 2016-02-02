@@ -37,13 +37,11 @@ class coinsData {
 //  This "greedy" change-maker lives in the moment, simply dishing out whatever coin
 //  looks like it will minimize the owed change the most.
 */
-void yoloCoins(coinsData & data){
+void greedyCoins(coinsData & data){
   while (data.target != 0){
-    std::cout << data.target << '\n';
     int addedCoin = 0;
     for (int x = 0; x < data.numDenoms; x++){
       if (data.denominations[x] > data.target && !addedCoin && data.target){
-        std::cout << "subtracting " << data.denominations[x-1] << '\n';
         data.numOfEach[x-1]++;
         data.target -= data.denominations[x-1];
         data.numCoins++;
@@ -51,7 +49,6 @@ void yoloCoins(coinsData & data){
       }
     }
     if (!addedCoin && data.target){
-      std::cout << "subtracting " << data.denominations[data.numDenoms-1] << '\n';
       data.numOfEach[data.numDenoms-1]++;
       data.target -= data.denominations[data.numDenoms-1];
       data.numCoins++;
@@ -76,7 +73,7 @@ void dynCoins(coinsData & data){
 		for(j = 0; j < data.numDenoms; j++){
 			count[i][j] = 0;
 		}
-	} 
+	}
 	
 	int min;
 
@@ -122,7 +119,7 @@ void dynCoins(coinsData & data){
  * This function recursively makes change for target cents
  * Recursively checks target value against array of available
  * coin denominations. This method is quite slow, as it will
- * Check each solution many times. As number of coin values grow the number of combos 
+ * Check each solution many times. As number of coin values grow the number of combos
  * grows exponentially.
  * Params: initialized coinsData object
  * Returns: void
@@ -216,11 +213,10 @@ int main(int argc, char ** argv){
     double runtime;
 
     start = time(0);
-    yoloCoins(greedyData);
+    greedyCoins(greedyData);
     end = time(0);
     runtime = (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
     
-    std::cout << "yoloCoins took " << runtime << " milliseconds\n";
     outputResults("Greedy output", arrayNum, greedyData, output);
     
     start = time(0);
@@ -228,7 +224,6 @@ int main(int argc, char ** argv){
     end = time(0);
     runtime = (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
     
-    std::cout << "dynCoins() took " << runtime << " milliseconds\n";
     outputResults("Dynamic programming output", arrayNum, dynData, output);
     
     
@@ -237,7 +232,6 @@ int main(int argc, char ** argv){
     end = time(0);
     runtime = (double) (end-start) / CLOCKS_PER_SEC * 1000.0;
  
-    std::cout << "changeSlow() took " << runtime << " milliseconds\n";
     outputResults("Divide and conquer output", arrayNum, divAndConqData, output);
 
   }
